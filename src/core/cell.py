@@ -1,32 +1,50 @@
-import pygame
-
 class c:
-    def __init__(self, X, Y):
-        self.X = X
-        self.Y = Y
+    def __init__(self, col, row):
+        self.col = col
+        self.row = row
         self.m = False
         self.r = False
         self.f = False
         self.n = 0
 
-    def drawCell(self, screen, x, y):
+    def getChar(self):
+        if self.f:
+            return "F"
         if not self.r:
-            pygame.draw.rect(screen, (189,189,189), (x*40, y*40, 40, 40))
-            pygame.draw.rect(screen, (255,255,255), (x*40, y*40, 40, 2))
-            pygame.draw.rect(screen, (255,255,255), (x*40, y*40, 2, 40))
-            pygame.draw.rect(screen, (128,128,128), (x*40+38, y*40, 2, 40))
-            pygame.draw.rect(screen, (128,128,128), (x*40, y*40+38, 40, 2))
-            if self.f:
-                font = pygame.font.SysFont("Arial", 20)
-                t = font.render("F", True, (255,0,0))
-                screen.blit(t, (x*40+12, y*40+10))
-        else:
-            pygame.draw.rect(screen, (192,192,192), (x*40, y*40, 40, 40))
-            pygame.draw.rect(screen, (128,128,128), (x*40, y*40, 40, 1))
-            if self.m:
-                pygame.draw.circle(screen, (0,0,0), (x*40+20, y*40+20), 10)
-            elif self.n > 0:
-                colors = [(0,0,255),(0,128,0),(255,0,0),(0,0,128),(128,0,0),(0,128,128),(0,0,0),(128,128,128)]
-                font = pygame.font.SysFont("Arial", 20)
-                t = font.render(str(self.n), True, colors[self.n-1])
-                screen.blit(t, (x*40+13, y*40+10))
+            return "#"
+        if self.m:
+            return "*"
+        if self.n == 0:
+            return "."
+        return str(self.n)
+
+    def getColor(self, colors):
+        if self.f:
+            return colors["flag"]
+        if not self.r:
+            return colors["hidden"]
+        if self.m:
+            return colors["mine"]
+        if self.n == 0:
+            return colors["empty"]
+        num_colors = [
+            colors["n1"], colors["n2"], colors["n3"], colors["n4"],
+            colors["n5"], colors["n6"], colors["n7"], colors["n8"]
+        ]
+        return num_colors[self.n - 1]
+
+    def toggle_flag(self):
+        if not self.r:
+            self.f = not self.f
+
+    def isRevealed(self):
+        return self.r
+
+    def isMine(self):
+        return self.m
+
+    def isFlagged(self):
+        return self.f
+
+    def adjacentCount(self):
+        return self.n
