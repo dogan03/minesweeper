@@ -1,0 +1,4 @@
+WINDOW_W = 640
+WINDOW_H = 700
+TITLE = "Minesweeper"
+FPS = 30
